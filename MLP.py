@@ -50,9 +50,59 @@ def XORGate(A):
     X2 = neuron2.run(A)
     return neuron3.run([X1,X2])
 
+# layers = number of neurons per layers
+# BIAS = bias rate
+# eta = learning rate
 
+class MultilayerPerceptron:
+    def __init__(self, layers, bias=1):
+        self.layers = np.array(layers,dtype=object)
+        self.bias = bias
+        self.network = []
+        self.values = []
+
+        for i in range(len(self.layers)):
+            self.values.append([])
+            self.network.append([])
+            self.values[i] = [0.0 for j in range(self.layers[i])]
+            if i>0:
+                for j in range(self.layers[i]):
+                    self.network[i].append(Perceptron(inputs=self.layers[i-1],bias=self.bias))
+
+        self.network = np.array([np.array(x) for x in self.network],dtype=object)
+        self.values = np.array([np.array(x) for x in self.values],dtype=object)
+
+    def set_weights(self,w_init):
+        for i in range(len(w_init)):
+            for j in range(len(w_init[i])):
+                self.network[i+1][j].set_weights(w_init[i][j])
+
+    def printWeights(self):
+        print()
+        for i in range(1,len(self.network)):
+            for j in range(self.layers[i]):
+                print("Layer",i+1,"Neuron",j,self.network[i][j].weights)
+        print()
+
+    def run(self,x):
+        x = np.array(x, dtype=object)
+        self.values[0] = x
+        for i in range(1,len(self.layers)):
+            for j in range(self.layers[i]):
+                self.values[i][j] = self.network[i][j].run(self.values[i-1])
+        return self.values[-1]    
+
+
+MLP = MultilayerPerceptron([2,2,1])
+MLP.set_weights([[[-10, -10, 15], [15, 15, -10]], [[10, 10, -15]]])
+MLP.printWeights()
+print("0 0 = {0:.10f}".format(MLP.run([0, 0])[0]))
+
+
+'''
 print("XOR Gate:")
 print("0 0 = {0:.10f}".format(XORGate([0, 0])))
 print("0 1 = {0:.10f}".format(XORGate([0, 1])))
 print("1 0 = {0:.10f}".format(XORGate([1, 0])))
 print("1 1 = {0:.10f}".format(XORGate([1, 1])))
+'''

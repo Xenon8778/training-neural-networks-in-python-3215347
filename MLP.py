@@ -30,8 +30,29 @@ class Perceptron:
 neuron = Perceptron(inputs=2)
 neuron.set_weights([15, 15, -10])  # OR
 
-print("Gate:")
-print("0 0 = {0:.10f}".format(neuron.run([0, 0])))
-print("0 1 = {0:.10f}".format(neuron.run([0, 1])))
-print("1 0 = {0:.10f}".format(neuron.run([1, 0])))
-print("1 1 = {0:.10f}".format(neuron.run([1, 1])))
+# print("Gate:")
+# print("0 0 = {0:.10f}".format(neuron.run([0, 0])))
+# print("0 1 = {0:.10f}".format(neuron.run([0, 1])))
+# print("1 0 = {0:.10f}".format(neuron.run([1, 0])))
+# print("1 1 = {0:.10f}".format(neuron.run([1, 1])))
+
+neuron1 = Perceptron(inputs=2)
+neuron1.set_weights([-10,-10,15])
+
+neuron2 = Perceptron(inputs=2)
+neuron2.set_weights([15,15,-10])
+
+neuron3 = Perceptron(inputs=2)
+neuron3.set_weights([10,10,-15])
+
+def XORGate(A):
+    X1 = neuron1.run(A)
+    X2 = neuron2.run(A)
+    return neuron3.run([X1,X2])
+
+
+print("XOR Gate:")
+print("0 0 = {0:.10f}".format(XORGate([0, 0])))
+print("0 1 = {0:.10f}".format(XORGate([0, 1])))
+print("1 0 = {0:.10f}".format(XORGate([1, 0])))
+print("1 1 = {0:.10f}".format(XORGate([1, 1])))

@@ -96,7 +96,12 @@ class MultilayerPerceptron:
 MLP = MultilayerPerceptron([2,2,1])
 MLP.set_weights([[[-10, -10, 15], [15, 15, -10]], [[10, 10, -15]]])
 MLP.printWeights()
+
+print("XOR Gate:")
 print("0 0 = {0:.10f}".format(MLP.run([0, 0])[0]))
+print("0 1 = {0:.10f}".format(MLP.run([0, 1])[0]))
+print("1 0 = {0:.10f}".format(MLP.run([1, 0])[0]))
+print("1 1 = {0:.10f}".format(MLP.run([1, 1])[0]))
 
 
 '''

@@ -95,21 +95,48 @@ def bp(self,x,y):
     """Run a single (x,y) pair with the backpropagation algorithm"""
     x = np.array(x,dtype = object)
     y = np.array(y,dtype = object)
-
-#Challenge: Write Backpropagation algorithm.
-# Here you have it step by step
-# 
-# Step 1: Feed a sample to the neural network
-# 
-# Step 2: calculate the MSE
-# 
-# Step 3: calculate the output error terms
-# 
-# Step 4: calculate the error term of each unite on each layer
+    #Challenge: Write Backpropagation algorithm.
+    # Here you have it step by step
+    # 
+    # Step 1: Feed a sample to the neural network
+    out = self.run(x) 
+    # Step 2: calculate the MSE
+    Resi = y-out
+    MSE = sum((Resi)**2)/len(y)
+    # Step 3: calculate the output error terms
+    delo = (Resi)*out*(1-out) 
+    # Step 4: calculate the error term of each unite on each layer
 
     for i in reversed(range(1,len(self.network)-1)):
         for h in range(len(self.network[i])):
             fwd_error = 0.0
             for k in range(self.layers[i+1]):
-                fwd_error += 
-            self.d[i][h] = 
+                fwd_error += #To edit
+            self.d[i][h] = #To edit
+    # Step 5 and 6: calculate the deltas and update the weights
+    for i in range(1,len(self.network)):
+        for j in range(self.layers[i]):
+            for k in range(self.layers[i-1]+1):
+                pass #Fill in 
+    return MSE
+
+#Test code
+mlp = MultilayerPerceptron(layers = [2,2,1])
+print("\n Training neural network as an XOR Gate...\n")
+for i in range(3000):
+    mse = 0.0
+    mse += mlp.bp([0,0],[0])
+    mse += mlp.bp([0,1],[1])
+    mse += mlp.bp([1,0],[1])
+    mse += mlp.bp([1,1],[0])
+    mse = mse/4
+    if (i%100 == 0):
+        print (mse)
+
+mlp.printWeights()
+
+print('MLP:')
+print("0 0 = {0:.10f}".format(mlp.run([0,0])[0]))
+print("0 1 = {0:.10f}".format(mlp.run([0,1])[0]))
+print("1 0 = {0:.10f}".format(mlp.run([1,0])[0]))
+print("1 1 = {0:.10f}".format(mlp.run([1,1])[0]))

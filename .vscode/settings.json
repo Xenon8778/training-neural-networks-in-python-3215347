@@ -21,5 +21,9 @@
   "workbench.colorTheme": "Visual Studio Dark",
   "workbench.fontAliasing": "antialiased",
   "workbench.statusBar.visible": true,
-  "python.linting.pylintCategorySeverity.convention": "Hint"
+  "python.linting.pylintCategorySeverity.convention": "Hint",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }

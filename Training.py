@@ -14,8 +14,8 @@ class Perceptron:
 
     def run(self, x):
         """Run the perceptron. x is a python list with the input values."""
-        sum = np.dot(np.append(x, self.bias), self.weights)
-        return self.sigmoid(sum)
+        x_sum = np.dot(np.append(x, self.bias), self.weights)
+        return self.sigmoid(x_sum)
 
     def set_weights(self, w_init):
         """Set the weights. w_init is a python list with the weights."""
@@ -27,9 +27,10 @@ class Perceptron:
 
 
 class MultilayerPerceptron:
-    def __init__(self, layers, bias=1):
+    def __init__(self, layers, bias=1, eta=0.5):
         self.layers = np.array(layers, dtype=object)
         self.bias = bias
+        self.eta = eta
         self.network = []
         self.values = []
         self.d = []
@@ -71,57 +72,47 @@ class MultilayerPerceptron:
             for j in range(self.layers[i]):
                 self.values[i][j] = self.network[i][j].run(self.values[i-1])
         return self.values[-1]
+    
+    def bp(self,x,y):
+        """Run a single (x,y) pair with the backpropagation algorithm"""
+        x = np.array(x,dtype = object)
+        y = np.array(y,dtype = object)
+        #Challenge: Write Backpropagation algorithm.
+        # Here you have it step by step
+        # 
+        # Step 1: Feed a sample to the neural network
+        o = self.run(x) 
+        
+        # Step 2: calculate the MSE
+        Resi = (y-o)
+        MSE = sum(Resi**2)/len(y)
+        
+        # Step 3: calculate the output error terms
+        self.d[-1] = o*(1-o)*Resi
 
+        # Step 4: calculate the error term of each unite on each layer
+        for i in reversed(range(1,len(self.network)-1)):
+            for h in range(len(self.network[i])):
+                fwd_error = 0.0
+                for k in range(self.layers[i+1]):
+                    fwd_error += self.network[i+1][k].weights[h]*self.d[i+1][k]
+                self.d[i][h] = fwd_error*self.values[i][h]*(1-self.values[i][h])
+        
+        # Step 5 and 6: calculate the deltas and update the weights
+        for i in range(1,len(self.network)):
+            for j in range(self.layers[i]):
+                for k in range(self.layers[i-1]+1):
+                    if k == self.layers[i-1]:
+                        delta = self.eta*self.d[i][j]*self.bias
+                    else:
+                        delta=self.eta*self.d[i][j]*self.values[i-1][k]
+                    self.network[i][j].weights[k] += delta
+        return MSE
 
-X = [3, 4, 3, 2]
-MLP = MultilayerPerceptron(X)
-
-out = MLP.run([2,5,1])
-
-Y = [0,1]
-Residual = Y-out
-MSE = sum((Residual)**2)/len(Y)
-print("MSE: ",MSE)
-
-#calculate output error term
-# Ok is the error for each neuron in the output layer only.
-# Ok*(1-Ok) this is the derivative of the sigmoid function
-deltao = (Residual)*out*(1-out)
-print("Delta: ", deltao)
-
-# calculate Hidden layer error term
-
-def bp(self,x,y):
-    """Run a single (x,y) pair with the backpropagation algorithm"""
-    x = np.array(x,dtype = object)
-    y = np.array(y,dtype = object)
-    #Challenge: Write Backpropagation algorithm.
-    # Here you have it step by step
-    # 
-    # Step 1: Feed a sample to the neural network
-    out = self.run(x) 
-    # Step 2: calculate the MSE
-    Resi = y-out
-    MSE = sum((Resi)**2)/len(y)
-    # Step 3: calculate the output error terms
-    delo = (Resi)*out*(1-out) 
-    # Step 4: calculate the error term of each unite on each layer
-
-    for i in reversed(range(1,len(self.network)-1)):
-        for h in range(len(self.network[i])):
-            fwd_error = 0.0
-            for k in range(self.layers[i+1]):
-                fwd_error += #To edit
-            self.d[i][h] = #To edit
-    # Step 5 and 6: calculate the deltas and update the weights
-    for i in range(1,len(self.network)):
-        for j in range(self.layers[i]):
-            for k in range(self.layers[i-1]+1):
-                pass #Fill in 
-    return MSE
 
 #Test code
 mlp = MultilayerPerceptron(layers = [2,2,1])
+mlp.printWeights()
 print("\n Training neural network as an XOR Gate...\n")
 for i in range(3000):
     mse = 0.0

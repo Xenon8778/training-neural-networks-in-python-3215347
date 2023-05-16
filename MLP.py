@@ -81,7 +81,7 @@ class MultilayerPerceptron:
         print()
         for i in range(1,len(self.network)):
             for j in range(self.layers[i]):
-                print("Layer",i+1,"Neuron",j,self.network[i][j].weights)
+                print("Layer",i,"Neuron",j,self.network[i][j].weights)
         print()
 
     def run(self,x):
